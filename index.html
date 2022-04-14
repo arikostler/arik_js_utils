@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Arik's Tools</title>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" type="image/png" href="img/toolbox.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body>
+
+	<div class="container">
+		<div class="row">
+			<div class="col-md text-center">
+				<div class="card">
+					<div class="card-header">
+						<h5 class="card-title">
+							Time Between
+						</h5>
+					</div>
+					<div class="card-body">
+						<div class="container-fluid">
+							<div class="row">
+								<div class="offset-lg-2 col-lg-4 mb-3">
+									<label for="start_date">Start Date</label>
+									<input type="datetime-local" name="start_date_time" id="start_date_time" class="form-control">
+								</div>
+								<div class="col-lg-4 mb-3">
+									<label for="end_date">End Date</label>
+									<input type="datetime-local" name="end_date_time" id="end_date_time" class="form-control">
+								</div>
+							</div>
+							<div class="row mt-3">
+								<div class="col">
+									<table class="table table-striped table-bordered">
+										<tr>
+											<td>Yrs</td>
+											<td>Mos</td>
+											<td>Day</td>
+											<td>Hrs</td>
+											<td>Mins</td>
+										</tr>
+										<tr>
+											<td><span id="years">0</span></td>
+											<td><span id="months">0</span></td>
+											<td><span id="days">0</span></td>
+											<td><span id="hours">0</span></td>
+											<td><span id="minutes">0</span></td>
+										</tr>
+									</table>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col">
+									<button class="btn btn-primary" onclick="calculateTimeBetween('#start_date_time', '#end_date_time')">Calculate</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.27.0/moment.min.js"></script>
+
+<script type="text/javascript" src="js/arikUtils.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</body>
+</html>
