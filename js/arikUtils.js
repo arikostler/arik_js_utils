@@ -70,6 +70,100 @@ let arikUtils = {
             return '0'+num;
         }
         return num;
+    },
+    formatSecondsAsHoursMinsAndSecs: function(secs){
+        let hours = 0;
+        let minutes = 0;
+        let seconds = 0;
+    
+        if(secs < 60){ // less than a minute
+            return secs;
+        } else if (secs < (60*60)){ // less than an hour
+            minutes = Math.floor(secs/60);
+            seconds = secs - (minutes*60);
+            return `${minutes}:${leadingZero(seconds)}`;
+        } else { //hour and up
+            hours = Math.floor(Math.floor(secs/60)/60);
+            minutes = Math.floor((secs - (hours*60*60))/60);
+            seconds = secs - (hours*60*60) - (minutes*60);
+            return `${hours}:${leadingZero(minutes)}:${leadingZero(seconds)}`;
+        }
+    },
+    toast: function(message, alertType) {
+        let toastContainer = document.getElementById("my-toast-container");
+        if(toastContainer === null){
+            let tctemplate = `<!--Toast Container-->
+            <div id="my-toast-container" class="toast-container position-fixed bottom-0 end-0 p-3"></div>`;
+            $('body').append(tctemplate);
+        }
+        let bg_class = "";
+        let txt_class= "";
+        let closeBtnColor = "";
+        if(alertType === undefined){
+            alertType = "light";
+        }
+        if(alertType.trim().toLowerCase() === 'primary'){
+            bg_class = "bg-primary";
+            txt_class= "text-white";
+            closeBtnColor = "btn-close-white";
+        } else if(alertType.trim().toLowerCase() === 'secondary'){
+            bg_class = "bg-secondary";
+            txt_class= "text-white";
+            closeBtnColor = "btn-close-white";
+        } else if(alertType.trim().toLowerCase() === 'success'){
+            bg_class = "bg-success";
+            txt_class= "text-white";
+            closeBtnColor = "btn-close-white";
+        } else if(alertType.trim().toLowerCase() === 'danger'){
+            bg_class = "bg-danger";
+            txt_class= "text-white";
+            closeBtnColor = "btn-close-white";
+        } else if(alertType.trim().toLowerCase() === 'warning'){
+            bg_class = "bg-warning";
+        } else if(alertType.trim().toLowerCase() === 'info'){
+            bg_class = "bg-info";
+        } else if(alertType.trim().toLowerCase() === 'light'){
+            bg_class = "bg-light";
+        } else if(alertType.trim().toLowerCase() === 'dark'){
+            bg_class = "bg-dark";
+            txt_class= "text-white";
+            closeBtnColor = "btn-close-white";
+        }
+    
+        let now = new Date();
+        let template = `<div class="toast align-items-center ${bg_class} ${txt_class} animate__animated animate__slideInRight animate__faster" 
+            role="alert" aria-live="assertive" aria-atomic="true" id="toast_${Date.now()}">
+            <div class="d-flex">
+                <div class="toast-body" style="font-size:16px;">
+                    ${message}
+                </div>
+                <button type="button" class="btn-close ${closeBtnColor} me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>`;
+        $('#my-toast-container').append(template);
+        let toastOptions = {};
+        let toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        let toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl, toastOptions)
+        });
+        toastList.forEach(toast => {
+            toast.show();
+            let myToastEl = document.getElementById(toast._element.id);
+            myToastEl.addEventListener('hide.bs.toast', function () {
+                myToastEl.classList.remove("animate__slideInRight");
+                myToastEl.classList.add("animate__slideOutUp");
+                myToastEl.classList.add("animate__faster");
+            });
+            myToastEl.addEventListener('hidden.bs.toast', function () {
+                myToastEl.remove();
+            });
+        });
+    },
+    formatLongNumberString: function(numberString) {
+        if(numberString!==undefined){
+            return numberString.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+        }
+        return numberString;
     }
 }
 // Date.prototype.isDST = function() {
