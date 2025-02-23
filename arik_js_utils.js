@@ -27,6 +27,40 @@ let arik_js_utils = {
 			$(indicator_id).removeClass('fa-minus');
 		});
 	},
+    handleCollapseIndicatorSpecific: function (collapse_target_id, collapse_indicator_id, classes) {
+        // Bootstrap Collapse Indicator
+        // If no classes are provided, this function can automatically detect whether font-awesome or bootstrap icons are used
+        // Classes must be a JSON object containing a "collapsed" reference and an "expanded" reference. Both must be strings
+        if (!classes || (classes.package && classes.package !== "font-awesome" && classes.package !== "bootstrap")) {
+            // attempt to auto-detect which font-based-icon package is used
+            classes = {
+                collapsed: ($(collapse_indicator_id).hasClass('fa')) ? 'fa-plus' : 'glyphicon-plus',
+                expanded: ($(collapse_indicator_id).hasClass('fa')) ? 'fa-minus' : 'glyphicon-minus'
+            };
+        } else if (classes.package) {
+            if (classes.package === 'font-awesome') {
+                classes = {
+                    collapsed: 'fa-plus',
+                    expanded: 'fa-minus'
+                }
+            } else if (classes.package === 'bootstrap') {
+                classes = {
+                    collapsed: 'glyphicon-plus',
+                    expanded: 'glyphicon-minus'
+                }
+            }
+        }
+        $(collapse_target_id).on('show.bs.collapse', function () {
+            // About to expand. Change to minus sign.
+            $(collapse_indicator_id).removeClass(classes.collapsed);
+            $(collapse_indicator_id).addClass(classes.expanded);
+        });
+        $(collapse_target_id).on('hide.bs.collapse', function () {
+            // About to collapse. Change to plus sign.
+            $(collapse_indicator_id).removeClass(classes.expanded);
+            $(collapse_indicator_id).addClass(classes.collapsed);
+        });
+    },
 	removeTemporarySpinner: function(el) {
 		$(el).attr("disabled", false);
 		$(el).find('.temporary_spinner').remove();
@@ -166,6 +200,11 @@ let arik_js_utils = {
         return numberString;
     }
 }
+
+if (typeof jQuery === 'undefined') {
+    throw new Error('arik_js_utils.js requires jQuery');
+}
+
 // Date.prototype.isDST = function() {
 //     let daylight = new Date(this.getFullYear(), 7, 1);
 //     return this.getTimezoneOffset() === daylight.getTimezoneOffset();
@@ -180,3 +219,43 @@ Date.prototype.stdTimezoneOffset = function() {
   Date.prototype.isDST = function() {
 	return this.getTimezoneOffset() !== this.stdTimezoneOffset();
   }
+
+// Animate.css javascript function
+// Retrieved from https://github.com/daneden/animate.css
+// To use this function:
+// $('#yourElement').animateCss('bounce');
+// $('#yourElement').animateCss('bounce').then(function(result){
+//      console.log("Animation Complete");
+// };
+// let result = await $('#yourElement').animateCss('bounce');
+$.fn.extend({
+    animateCss: function (animationName, options) {
+        options = options || {};
+        options.delay = options.delay || 0;
+        options.waitForInvisible = options.waitForInvisible || false;
+        let _this = this;
+        return new Promise(function (resolve, reject) {
+            setTimeout(function () {
+                try {
+                    if(!$(_this).is(":visible")){
+                        if(options.waitForInvisible){
+                            console.warn("Animation target not visible or doesn't exist. Promise chain will wait for this element to continue.")
+                        } else {
+                            console.warn("Animation on invisible element skipped!");
+                            resolve(_this);
+                            return;
+                        }
+                    }
+                    let animationEnd = 'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend';
+                    _this.addClass('animated ' + animationName).one(animationEnd, function () {
+                        $(_this).removeClass('animated ' + animationName);
+                        resolve(_this);
+                    });
+                } catch (err) {
+                    console.error(err);
+                    reject(err);
+                }
+            }, options.delay);
+        });
+    }
+});

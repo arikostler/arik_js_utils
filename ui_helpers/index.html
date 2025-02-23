@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>TEST</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"/>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css"/>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+	<style type="text/css">
+		.square {
+			height: 50px;
+			width: 50px;
+		}
+
+		.blue {
+			background-color: blue;
+		}
+
+		.lightblue {
+			background-color: lightblue;
+		}
+
+		.lightgreen {
+			background-color: lightgreen;
+		}
+
+		.whitesmoke {
+			background-color: whitesmoke;
+		}
+
+		#test1, #test2, #test3 {
+			/*margin: auto;*/
+			margin-top: 50px;
+		}
+	</style>
+	<script type="text/javascript">
+        // var arik_js_utils_autoFixPromiseSupport = false;
+        let invisWait = false;
+        $(document).ready(function () {
+            $('#invisWait').text(invisWait);
+        });
+
+        function animations(delay) {
+            $('#test1').animateCss('rubberBand', delay).then(function (res) {
+                $('#test2').animateCss('bounce', {waitForInvisible: invisWait}).then(function (res) {
+                    $('#test3').animateCss('swing');
+                })
+            })
+        }
+
+        async function animations_async_await(delay) {
+            let res1 = await $('#test1').animateCss('rubberBand', delay);
+            let res2 = await $('#test2').animateCss('bounce', {waitForInvisible: invisWait});
+            let res3 = await $('#test3').animateCss('swing');
+        }
+
+        function testSleep_then(millis) {
+            if (!$('#sleepButton').hasClass('disabled')) {
+                $('#sleepButton').addClass("disabled");
+                $('#sleepIndicator').show();
+                $('#sleepResponse').text("Sleeping...");
+                arik_js_utils.sleep(millis).then(function (res) {
+                    $('#sleepButton').removeClass("disabled");
+                    $('#sleepIndicator').hide();
+                    $('#sleepResponse').text("Complete!");
+                    setTimeout(function () {
+                        $('#sleepResponse').animateCss("fadeOutDown").then(function () {
+                            $('#sleepResponse').text("");
+                        })
+                    }, 2000);
+                });
+            }
+        }
+
+        async function testSleep(millis) {
+            if (!$('#sleepButton').hasClass('disabled')) {
+                $('#sleepButton').addClass("disabled");
+                $('#sleepIndicator').show();
+                $('#sleepResponse').text("Sleeping...");
+                let res = await arik_js_utils.sleep(millis);
+                $('#sleepButton').removeClass("disabled");
+                $('#sleepIndicator').hide();
+                $('#sleepResponse').text("Complete!");
+                setTimeout(async function () {
+                    let res = await $('#sleepResponse').animateCss("fadeOutDown");
+                    $('#sleepResponse').text("");
+                }, 2000);
+            }
+        }
+	</script>
+</head>
+<body>
+<div class="container-fluid">
+	<div class="col-md-6">
+		<button class="btn btn-primary" data-toggle="collapse" data-target="#test0" onclick="arik_js_utils.handleCollapseIndicators('#test0', '#indicator')">
+			Collapse Control
+			<i class="fa fa-plus fa-fw" id="indicator"></i>
+		</button>
+		<button class="btn btn-success" onclick="animations_async_await()">Animations</button>
+		<button class="btn btn-warning" onclick="$('#test2').toggle()">Show/Hide #test2</button>
+		<button class="btn btn-default" onclick="invisWait = !invisWait; $('#invisWait').text(invisWait);">waitForInvisible: <span id="invisWait"></span></button>
+		<div class="square blue collapse" id="test0"></div>
+		<div class="square whitesmoke" id="test1"></div>
+		<div class="square lightblue" id="test2"></div>
+		<div class="square lightgreen" id="test3"></div>
+	</div>
+	<div class="col-md-6 form-inline">
+		<input type="text" id="sleepTime" placeholder="milliseconds" class="form-control">
+		<button type="button" onclick="testSleep($('#sleepTime').val())" id="sleepButton" class="btn btn-info">Test Sleep <i class="fa fa-spinner fa-pulse" id="sleepIndicator"
+		                                                                                                                     style="display:none;"></i></button>
+		<p id="sleepResponse"></p>
+	</div>
+</div>
+
+<script type="text/javascript" src="../arik_js_utils.js"></script>
+</body>
+</html>
