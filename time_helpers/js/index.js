@@ -27,6 +27,6 @@ function calculateTimeBetween(start, end) {
 	$('#minutes').parent().css('background-color', (minutes>0)?'white':'lightgray');
 }
 
-function sinceMyFirstDayAtRgi(){
-	$('#start_date_time').val("2020-04-06T07:30");
+function sinceMyFirstDay(){
+	$('#start_date_time').val("2020-01-01T00:00");
 }
